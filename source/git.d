@@ -70,7 +70,7 @@ bool checkoutRewindBranch() {
 }
 
 bool cleanupGit() {
-	auto rslt = runGitCommand("git checkout master");
+	auto rslt = runGitCommand("git checkout -f master");
 	if(!rslt) {
 		writefln!"failed to checkout master"();
 		return false;
@@ -88,7 +88,6 @@ bool cleanupGit() {
 bool deleteCurrentCommit() {
 	auto rslt = runGitCommand("git reset HEAD~");
 	if(!rslt) {
-		writefln!"failed to delete current commit"();
 		return false;
 	}
 	return true;

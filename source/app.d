@@ -26,7 +26,13 @@ int main(string[] args) {
 	}
 	scope(exit) cleanupGit();
 
-	writeln(getSHA());
+	SHA cur;
+	size_t commit = 1;
+	do { 
+		cur = getSHA();
+		writefln!"%5d %s"(commit, cur.sha);
+		++commit;
+	} while(deleteCurrentCommit());
 
 	return 0;
 }
