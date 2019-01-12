@@ -1,5 +1,7 @@
 module git;
 
+import std.process;
+
 bool doesGitExists() {
 	import std.file : exists, isDir;
 	import std.path : buildPath;
