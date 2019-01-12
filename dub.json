@@ -1,0 +1,12 @@
+{
+	"description": "Extracting statistical data from a git",
+	"license": "GPL3",
+	"authors": [
+		"burner"
+	],
+	"dependencies" : {
+		"argsd": "~>0.4.1"
+	},
+	"copyright": "Copyright © 2019, burner",
+	"name": "gitsd"
+}
