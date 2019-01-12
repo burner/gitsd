@@ -1,6 +1,19 @@
 module git;
 
+import std.stdio;
 import std.process;
+import std.format;
+
+import options;
+
+bool runGitCommand(string func) {
+	string sh = format!"cd %s && %s"(config().gitPath, func);
+	auto rslt = executeShell(sh);
+	if(rslt.status != 0) {
+		return false;
+	}
+	return true;
+}
 
 bool doesGitExists() {
 	import std.file : exists, isDir;
@@ -25,5 +38,39 @@ bool doesGitExists() {
 }
 
 bool isGetInCleanState() {
-	return false;
+	auto rslt = runGitCommand("git diff-index --quiet HEAD --");
+	if(!rslt) {
+		writefln!"git has uncommited changes"();
+		return false;
+	}
+	return true;
+}
+
+bool checkoutRewindBranch() {
+	if(!cleanupGit()) {
+		writefln!"failed to cleanup git and checkout master"();
+	}
+	
+	if(!runGitCommand("git checkout -b " ~ config().tmpBranchName)) {
+		writefln!"failed to create tmp branch"();
+		return false;
+	}
+
+	return true;
+}
+
+bool cleanupGit() {
+	auto rslt = runGitCommand("git checkout master");
+	if(!rslt) {
+		writefln!"failed to checkout master"();
+		return false;
+	}
+
+	if(!runGitCommand("git rev-parse --verify " ~ config().tmpBranchName)) {
+		if(!runGitCommand("git branch -d " ~ config().tmpBranchName)) {
+			writefln!"failed to delete tmp branch"();
+			return false;
+		}
+	}
+	return true;
 }

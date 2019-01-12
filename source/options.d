@@ -8,6 +8,9 @@ struct Options {
 
 	@Arg("Output path directory", 'o')
 	string outDir = ".";
+
+	@Arg("Name of tmp branch")
+	string tmpBranchName = "gitsd_stats_branch";
 }
 
 private Options __options;

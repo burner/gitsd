@@ -17,5 +17,9 @@ int main(string[] args) {
 		return 1;
 	}
 
+	if(!isGetInCleanState()) {
+		return 2;
+	}
+
 	return 0;
 }
