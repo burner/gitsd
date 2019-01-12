@@ -21,5 +21,12 @@ int main(string[] args) {
 		return 2;
 	}
 
+	if(!checkoutRewindBranch()) {
+		return 3;
+	}
+	scope(exit) cleanupGit();
+
+	writeln(getSHA());
+
 	return 0;
 }

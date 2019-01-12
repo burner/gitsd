@@ -4,7 +4,7 @@ import args;
 
 struct Options {
 	@Arg("Path to the git to analyze", 'i')
-	string gitPath = ".";
+	string gitPath = "../D/vibe.d";
 
 	@Arg("Output path directory", 'o')
 	string outDir = ".";

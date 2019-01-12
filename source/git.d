@@ -15,6 +15,16 @@ bool runGitCommand(string func) {
 	return true;
 }
 
+bool runGitCommand(string func, ref string stdout) {
+	string sh = format!"cd %s && %s"(config().gitPath, func);
+	auto rslt = executeShell(sh);
+	if(rslt.status != 0) {
+		return false;
+	}
+	stdout = rslt.output;
+	return true;
+}
+
 bool doesGitExists() {
 	import std.file : exists, isDir;
 	import std.path : buildPath;
@@ -66,11 +76,33 @@ bool cleanupGit() {
 		return false;
 	}
 
-	if(!runGitCommand("git rev-parse --verify " ~ config().tmpBranchName)) {
+	if(runGitCommand("git rev-parse --verify " ~ config().tmpBranchName)) {
 		if(!runGitCommand("git branch -d " ~ config().tmpBranchName)) {
 			writefln!"failed to delete tmp branch"();
 			return false;
 		}
 	}
 	return true;
+}
+
+bool deleteCurrentCommit() {
+	auto rslt = runGitCommand("git reset HEAD~");
+	if(!rslt) {
+		writefln!"failed to delete current commit"();
+		return false;
+	}
+	return true;
+}
+
+struct SHA {
+	bool worked;
+	string sha;
+}
+
+SHA getSHA() {
+	import std.string : strip;
+	SHA ret;
+	ret.worked = runGitCommand("git rev-parse HEAD", ret.sha);
+	ret.sha = ret.sha.strip();
+	return ret;
 }
