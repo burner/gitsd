@@ -9,3 +9,9 @@ struct Author {
 struct Commit {
 	Author* author;
 }
+
+struct ScrappedDate {
+	Commit[] commits;
+	Author*[] authors;
+	Author*[string] authorByMail;
+}
