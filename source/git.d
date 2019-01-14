@@ -105,3 +105,29 @@ SHA getSHA() {
 	ret.sha = ret.sha.strip();
 	return ret;
 }
+
+string[] getFiles() {
+	import std.string : split;
+	string lines;
+	auto rslt = runGitCommand("git ls-tree -r -t --name-only HEAD", lines);
+	if(!rslt) {
+		writefln!"failed to get the list of files"();
+		string[] dummy;
+		return dummy;
+	}
+	return lines.split("\n");
+}
+
+string[] getLog() {
+	import std.string : split;
+	string lines;
+	auto rslt = runGitCommand(
+			"git log --word-diff=porcelain -n 1 --date=iso-strict --stat", lines
+		);
+	if(!rslt) {
+		writefln!"failed to get the commit log"();
+		string[] dummy;
+		return dummy;
+	}
+	return lines.split("\n");
+}

@@ -3,7 +3,9 @@ import std.stdio;
 import args;
 
 import options;
+import result;
 import git;
+import splitlog;
 
 int main(string[] args) {
 	const helpWanted = parseArgsWithConfigFile(configWriteable(), args);
@@ -29,8 +31,11 @@ int main(string[] args) {
 	SHA cur;
 	size_t commit = 1;
 	do { 
+		string[] files = getFiles();
 		cur = getSHA();
-		writefln!"%5d %s"(commit, cur.sha);
+		string[] log = getLog();
+		Commit c = splitLog(log);	
+		writefln!"%5d %s %s"(commit, cur.sha, c);
 		++commit;
 	} while(deleteCurrentCommit());
 
